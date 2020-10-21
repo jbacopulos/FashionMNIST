@@ -12,20 +12,28 @@ from tensorflow import keras
 fashion_mnist = keras.datasets.fashion_mnist
 (train_images, train_labels), (test_images, test_labels) = fashion_mnist.load_data()
 
+train_images = train_images.reshape(train_images.shape[0],28,28,1)
+test_images = test_images.reshape(test_images.shape[0],28,28,1)
+
 # Scale image colors
 train_images = train_images / 255
 test_images = test_images / 255
 
+
+
 # Create the model
 model = keras.Sequential([
-    keras.layers.Flatten(input_shape=(28, 28)),
-    keras.layers.Dense(128, activation='relu'),
-    keras.layers.Dense(128, activation='relu'),
-    keras.layers.Dense(10)
+    tf.keras.layers.Conv2D(32, (3, 3), activation='relu', kernel_initializer='he_normal', input_shape=(28, 28, 1)),
+    tf.keras.layers.MaxPooling2D((2, 2)),
+    tf.keras.layers.Dropout(0.2),
+    tf.keras.layers.Flatten(),
+    tf.keras.layers.Dense(256, activation='relu'),
+    tf.keras.layers.Dropout(0.5),
+    tf.keras.layers.Dense(10, activation='softmax')
 ])
 
 # Compile the model
-model.compile(optimizer='adam', loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), 
+model.compile(optimizer='adam', loss=tf.keras.losses.SparseCategoricalCrossentropy(), 
 metrics=['accuracy'])
 
 print('')

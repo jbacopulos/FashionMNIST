@@ -38,5 +38,6 @@ img = img.resize((28, 28))
 img = np.array(img)
 img = img / 255
 img = (np.expand_dims(img, 0))
+img = img[:, :, :, None]
 predictions_single = probability_model.predict(img)
 print(class_names[np.argmax(predictions_single)])
